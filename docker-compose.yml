@@ -1,15 +1,15 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres:
-    container_name: nest-cean-pg
+    container_name: random-teams
     image: postgres
     ports:
-     - 5432:5432
+      - 5432:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: docker
-      POSTGRES_DB: nest-clean
+      POSTGRES_DB: random-teams
       PGDATA: /data/postgres
     volumes:
-     - ./data/pg:/data/postgres
+      - ./data/pg:/data/postgres

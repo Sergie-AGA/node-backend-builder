@@ -16,7 +16,7 @@
     "@vitest/coverage-v8": "^0.33.0",
     "@vitest/ui": "^0.33.0",
     "eslint": "^8.46.0",
-    "prisma": "^5.1.1",
+    "prisma": "^5.2.0",
     "supertest": "^6.3.3",
     "tsx": "^3.12.7",
     "typescript": "^5.1.6",
@@ -26,7 +26,7 @@
   "dependencies": {
     "@fastify/cookie": "^9.0.4",
     "@fastify/jwt": "^7.2.0",
-    "@prisma/client": "^5.1.1",
+    "@prisma/client": "^5.2.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.3.1",
     "fastify": "^4.21.0",
