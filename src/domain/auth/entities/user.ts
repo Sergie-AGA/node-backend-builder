@@ -1,15 +1,15 @@
 import { Entity } from "@/domain/core/entities/entity";
 import { UniqueEntityID } from "@/domain/core/entities/unique-entity-id";
 
-interface InstructorProps {
-  name: string;
+interface userProps {
+  username: string;
   email: string;
 }
 
-export class Instructor extends Entity<InstructorProps> {
-  static create(props: InstructorProps, id?: UniqueEntityID) {
-    const instructor = new Instructor(props, id);
+export class User extends Entity<userProps> {
+  static create(props: userProps, id?: UniqueEntityID) {
+    const user = new User(props, id);
 
-    return instructor;
+    return user;
   }
 }
