@@ -1,22 +1,22 @@
 @baseUrl = http://localhost:3333
 
-# @name create_account
-POST {{baseUrl}}/accounts
+# @name register account
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "name": "Diego Fernandes",
-  "email": "diego@rocketseat.com.br",
+  "username": "Test",
+  "email": "test@example.com",
   "password": "123456"
 }
 
-###
+# ###
 
-# @name authenticate
-POST {{baseUrl}}/sessions
-Content-Type: application/json
+# # @name authenticate
+# POST {{baseUrl}}/sessions
+# Content-Type: application/json
 
-{
-  "email": "diego@rocketseat.com.br",
-  "password": "123456"
-}
+# {
+#   "email": "diego@rocketseat.com.br",
+#   "password": "123456"
+# }
