@@ -3,7 +3,7 @@ import cookie from "@fastify/cookie";
 import { ZodError } from "zod";
 import { env } from "./env";
 import fastifyJwt from "@fastify/jwt";
-import { authRoutes } from "./domain/auth/controllers/routes";
+import { routes } from "./routes";
 
 export const app = fastify();
 
@@ -20,8 +20,10 @@ app.register(fastifyJwt, {
   },
 });
 
-//Routes
-app.register(authRoutes, { prefix: "/auth" });
+// Routes
+routes.forEach((route) => {
+  app.register(route.handler, { prefix: route.prefix });
+});
 
 app.setErrorHandler((err, _, res) => {
   if (err instanceof ZodError) {

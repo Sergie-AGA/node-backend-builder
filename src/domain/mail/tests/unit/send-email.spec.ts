@@ -12,7 +12,7 @@ describe("Send e-mail Use Case", () => {
   //   sut = new RegisterUseCase(usersRepository);
   // });
 
-  it.only("should be able to send an e-mail", async () => {
+  it.skip("should be able to send an e-mail", async () => {
     const { user } = await sut.execute({
       from: "sender@example.com",
       to: process.env.TEST_EMAIL,

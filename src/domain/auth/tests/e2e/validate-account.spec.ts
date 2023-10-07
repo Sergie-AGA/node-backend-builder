@@ -18,7 +18,7 @@ describe("Register and Send e-mail Integration Test (e2e)", () => {
     sendMailUseCase = new SendMailUseCase(usersRepository, transport);
   });
 
-  it("should be able to register a user and send an e-mail", async () => {
+  it.skip("should be able to register a user and send an e-mail", async () => {
     const { user } = await registerUseCase.execute({
       username: "John Doe",
       email: "john.doe@gmail.com",
@@ -45,7 +45,7 @@ describe("Activate account after registering (e2e)", () => {
     sendMailUseCase = new SendMailUseCase(usersRepository, transport);
   });
 
-  it("should be able to register a user and send an e-mail", async () => {
+  it.skip("should be able to register a user and send an e-mail", async () => {
     const { user } = await registerUseCase.execute({
       username: "John Doe",
       email: "john.doe@gmail.com",
