@@ -3,7 +3,7 @@ import { z } from "zod";
 import { UserAlreadyExistsError } from "@/domain/auth/errors/user-already-exists";
 import { makeUseCase } from "@/patterns/factories/MakeUseCase";
 import { PrismaUsersRepository } from "../repositories/prisma/prisma-users-repository";
-import { RegisterUseCase } from "../use-cases/register";
+import { RegisterUseCase } from "../useCases/register";
 
 export async function register(req: FastifyRequest, res: FastifyReply) {
   // Sanitise data
