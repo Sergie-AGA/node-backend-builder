@@ -1,3 +1,3 @@
-import { DayjsDateProvider } from "./implementations/DayjsDateProvider";
+import { DayjsDateProvider } from "./implementations/dayjsDateProvider";
 
 export class DateProvider extends DayjsDateProvider {}

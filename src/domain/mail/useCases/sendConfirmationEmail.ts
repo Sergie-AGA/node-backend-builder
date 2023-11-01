@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { IEmailRepository } from "../repositories/IEmailRepository";
-import { DateProvider } from "@/services/DateProvider/DateProvider";
+import { DateProvider } from "@/services/dateProvider/dateProvider";
 import { applicationSettings } from "@/domain/applicationSettings";
 interface SendConfirmationEmailUseCaseRequest {
   from: string;
