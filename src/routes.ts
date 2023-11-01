@@ -1,4 +1,4 @@
-import { authRoutes } from "@/domain/auth/controllers/routes";
+import { authRoutes } from "@/domain/auth/http/controllers/routes";
 
 export const routes = [
   {

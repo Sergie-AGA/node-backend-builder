@@ -1,4 +1,4 @@
-interface IEmailProvider {
+interface IEmailRepository {
   sendMail(
     to: string,
     subject: string,
@@ -7,4 +7,4 @@ interface IEmailProvider {
   ): Promise<void>;
 }
 
-export { IEmailProvider };
+export { IEmailRepository };

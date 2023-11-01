@@ -1,5 +1,6 @@
 import { Entity } from "@/domain/core/entities/entity";
 import { UniqueEntityID } from "@/domain/core/entities/unique-entity-id";
+import { z } from "zod";
 
 interface emailProps {
   from: string;
@@ -26,6 +27,15 @@ export class Email extends Entity<emailProps> {
   }
 
   static create(props: emailProps, id?: UniqueEntityID) {
+    const sendConfirmEmailBodySchema = z.object({
+      to: z.string().email(),
+      subject: z.string(),
+      html: z.string(),
+    });
+    const   sendConfirmEmailBodySchema.parse(props);
+
+    this.props = 
+
     const email = new Email(props, id);
 
     return email;

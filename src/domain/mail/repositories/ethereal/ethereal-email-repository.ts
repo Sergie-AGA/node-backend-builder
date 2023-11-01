@@ -3,6 +3,8 @@ import nodemailer, { Transporter } from "nodemailer";
 import handlebars from "handlebars";
 import fs from "fs";
 
+
+
 export class EtherealEmailRepository implements IEmailProvider {
   private client!: Transporter;
 
@@ -28,10 +30,11 @@ export class EtherealEmailRepository implements IEmailProvider {
   }
 
   async sendMail(
-    to: string,
-    subject: string,
-    variables: any,
-    contentPath: string
+{    to,
+  from,
+    subject,
+    variables,
+    contentPath}: 
   ): Promise<void> {
     const templateFileContent = fs.readFileSync(contentPath).toString("utf-8");
 
@@ -41,7 +44,7 @@ export class EtherealEmailRepository implements IEmailProvider {
 
     const message = await this.client.sendMail({
       to,
-      from: "Random Teams <noreply@randomteams.com>",
+      from,
       subject,
       html: templateHTML,
     });

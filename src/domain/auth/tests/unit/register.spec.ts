@@ -1,8 +1,9 @@
 import { expect, describe, it, beforeEach } from "vitest";
-import { RegisterUseCase } from "@/domain/auth/useCases/register";
+import { RegisterUseCase } from "@/domain/auth/application/useCases/register";
 import { compare } from "bcryptjs";
-import { InMemoryUsersRepository } from "@/domain/auth/repositories/in-memory/in-memory-users-repository";
-import { UserAlreadyExistsError } from "@/domain/auth/errors/user-already-exists";
+import { InMemoryUsersRepository } from "@/domain/auth/application/repositories/in-memory/in-memory-users-repository";
+import { UserAlreadyExistsError } from "@/domain/auth/application/useCases/errors/userAlreadyExists";
+import { mockUser } from "../mocks/mockUser";
 
 let usersRepository: InMemoryUsersRepository;
 let sut: RegisterUseCase;
@@ -14,45 +15,27 @@ describe("Register Use Case", () => {
   });
 
   it("should be able to register", async () => {
-    const { user } = await sut.execute({
-      username: "John Doe",
-      email: "john.doe@gmail.com",
-      password: "123456",
-    });
+    await sut.execute(mockUser);
 
-    expect(user.id).toEqual(expect.any(String));
+    expect(usersRepository.items[0]).toEqual(
+      expect.objectContaining({ email: mockUser.email })
+    );
+    expect(usersRepository.items).toHaveLength(1);
   });
 
   it("should hash user password upon registration", async () => {
-    const { user } = await sut.execute({
-      username: "John Doe",
-      email: "john.doe@gmail.com",
-      password: "123456",
-    });
+    const user = await sut.execute(mockUser);
 
-    const isPasswordCorrectlyHashed = await compare(
-      "123456",
-      user.password_hash
-    );
+    const isPasswordCorrectlyHashed = await compare("123456", user.password);
 
     expect(isPasswordCorrectlyHashed).toBe(true);
   });
 
   it("should not be able to register a user with the same email twice", async () => {
-    const email = "john.doe@gmail.com";
+    await sut.execute(mockUser);
 
-    await sut.execute({
-      username: "John Doe",
-      email,
-      password: "123456",
-    });
-
-    await expect(() =>
-      sut.execute({
-        username: "John Doe",
-        email,
-        password: "123456",
-      })
-    ).rejects.toBeInstanceOf(UserAlreadyExistsError);
+    await expect(() => sut.execute(mockUser)).rejects.toBeInstanceOf(
+      UserAlreadyExistsError
+    );
   });
 });

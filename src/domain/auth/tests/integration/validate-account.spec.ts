@@ -2,7 +2,7 @@ import { expect, describe, it, beforeEach } from "vitest";
 import { createTransport } from "nodemailer";
 import { RegisterUseCase } from "@/domain/auth/useCases/register";
 // import { SendMailUseCase } from "@/domain/mail/use-cases/send-mail";
-import { InMemoryUsersRepository } from "@/domain/auth/repositories/in-memory/in-memory-users-repository";
+import { InMemoryUsersRepository } from "@/domain/auth/application/repositories/in-memory/in-memory-users-repository";
 
 let usersRepository: InMemoryUsersRepository;
 let registerUseCase: RegisterUseCase;

@@ -1,37 +1,27 @@
-interface ISubscriber {
-  (data: unknown): void;
+interface IDomainEvent {
+  (event: any): void;
 }
 
-interface IPubSub {
-  subscribe(event: string, subscriber: ISubscriber): void;
-  unsubscribe(event: string, subscriber: ISubscriber): void;
-  publish(event: string, data: unknown): void;
-}
+export class PubSub {
+  private static subscribers: Record<string, Array<IDomainEvent>> = {};
 
-class PubSub implements IPubSub {
-  subscribers: Record<string, Array<ISubscriber>>;
-
-  constructor() {
-    this.subscribers = {};
-  }
-
-  subscribe(event: string, subscriber: ISubscriber) {
+  static subscribe(event: string, subscriber: IDomainEvent) {
     if (!this.subscribers[event]) {
       this.subscribers[event] = [];
     }
     this.subscribers[event].push(subscriber);
   }
 
-  unsubscribe(event: string, subscriber: ISubscriber) {
+  static unsubscribe(event: string, subscriber: IDomainEvent) {
     if (!this.subscribers[event]) {
       return;
     }
-    this.subscribers[event] = this.subscribers[event].filter(
-      (sub) => sub !== subscriber
-    );
+    this.subscribers[event] = this.subscribers[event].filter((sub) => {
+      return sub !== subscriber;
+    });
   }
 
-  publish(event: string, data: unknown) {
+  static publish(event: string, data: unknown) {
     if (!this.subscribers[event]) {
       return;
     }
