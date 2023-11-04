@@ -1,6 +1,11 @@
 import { Entity } from "@/domain/core/entities/entity";
 import { UniqueEntityID } from "@/domain/core/entities/unique-entity-id";
-import { RegisterBodySchema as IUser } from "../../authSettings";
+
+interface IUser {
+  email: string;
+  password: string;
+  status?: "registered" | "active" | "disabled";
+}
 
 export class User extends Entity<IUser> {
   get email() {
@@ -9,6 +14,14 @@ export class User extends Entity<IUser> {
 
   get password() {
     return this.props.password;
+  }
+
+  get status() {
+    return this.props.status;
+  }
+
+  set status(updatedStatus) {
+    this.props.status = updatedStatus;
   }
 
   static create(props: IUser, id?: UniqueEntityID) {

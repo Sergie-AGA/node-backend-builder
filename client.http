@@ -1,12 +1,22 @@
 @baseUrl = http://localhost:3333
 
-# @name register account
+# @name register_account
 POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
+  "email": "test@exampleee.com",
   "password": "123456"
+}
+
+###
+
+# @name confirm_account
+POST {{baseUrl}}/auth/confirm
+Content-Type: application/json
+
+{
+  "id": "2edb41f3-331a-4da1-a7a5-8c8a4c4d9a86"
 }
 
 # ###

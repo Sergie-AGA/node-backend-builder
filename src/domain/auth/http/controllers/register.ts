@@ -1,21 +1,26 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { RegisterHandler } from "../../authSettings";
 import { makeUseCase } from "@/patterns/factories/MakeUseCase";
-import { PrismaUsersRepository } from "@/domain/auth/application/repositories/prisma/PrismaUsersRepository";
 import { UserAlreadyExistsError } from "../../application/useCases/errors/userAlreadyExists";
+import { RegisterUseCase } from "../../application/useCases/register";
+import { genericError } from "@/domain/core/errors/genericError";
 import { PubSub } from "@/patterns/pubSub/GeneralPubSub";
 import { OnUserRegistered } from "@/domain/mail/events/OnUserRegistered";
-import { genericError } from "@/domain/core/errors/genericError";
-import { errorHandlingPipe } from "@/domain/core/utils/pipes/presenterErrorHandlingPipe";
 
 export async function register(req: FastifyRequest, res: FastifyReply) {
   try {
     const userRaw = RegisterHandler.validate(req.body);
 
-    const user = await makeUseCase(
-      PrismaUsersRepository,
-      RegisterHandler.repository
+    const response = await makeUseCase(
+      RegisterHandler.repository,
+      RegisterUseCase
     ).execute(userRaw);
+
+    if (response.isLeft()) {
+      throw response.value;
+    }
+
+    const user = response.value.user;
 
     return res
       .status(201)

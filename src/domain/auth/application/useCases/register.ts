@@ -3,8 +3,18 @@ import { IUsersRepository } from "@/domain/auth/application/repositories/IUsersR
 import { UserAlreadyExistsError } from "@/domain/auth/application/useCases/errors/userAlreadyExists";
 import { User } from "../../enterprise/entities/user";
 import { RegisterBodySchema } from "../../authSettings";
+import {
+  Either,
+  right,
+  left,
+} from "@/domain/core/utils/functionalErrorHandling/either";
 
-type RegisterUseCaseResponse = User;
+type RegisterUseCaseResponse = Either<
+  UserAlreadyExistsError,
+  {
+    user: User;
+  }
+>;
 
 export class RegisterUseCase {
   constructor(private usersRepository: IUsersRepository) {}
@@ -17,7 +27,7 @@ export class RegisterUseCase {
     );
 
     if (userWithSameEmail) {
-      throw new UserAlreadyExistsError(userData.email);
+      return left(new UserAlreadyExistsError(userData.email));
     }
 
     const password_hash = await RegisterHandler.hash(userData.password);
@@ -29,6 +39,6 @@ export class RegisterUseCase {
 
     await this.usersRepository.create(user);
 
-    return user;
+    return right({ user });
   }
 }

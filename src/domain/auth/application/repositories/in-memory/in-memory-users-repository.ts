@@ -1,5 +1,6 @@
 import { User } from "@/domain/auth/enterprise/entities/user";
 import { IUsersRepository } from "../IUsersRepository";
+import { UniqueEntityID } from "@/domain/core/entities/unique-entity-id";
 
 export class InMemoryUsersRepository implements IUsersRepository {
   public items: User[] = [];
@@ -10,7 +11,15 @@ export class InMemoryUsersRepository implements IUsersRepository {
     return data;
   }
 
-  async findById(id: string) {
+  async validateUser(id: string) {
+    const index = this.items.findIndex((el) => el.id.toString() === id);
+
+    this.items[index].status = "active";
+
+    return this.items[index];
+  }
+
+  async findById(id: UniqueEntityID) {
     const user = this.items.find((item) => item.id === id);
 
     if (!user) {

@@ -22,6 +22,7 @@ model User {
   password_hash  String
   account_status AccountStatus @default(registered)
   created_at     DateTime      @default(now())
+  updated_at     DateTime      @default(now())
 
   @@map("users")
 }

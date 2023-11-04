@@ -50,7 +50,6 @@
     "handlebars": "^4.7.8",
     "inquirer": "^9.2.11",
     "nodemailer": "^6.9.5",
-    "shelljs": "^0.8.5",
     "supertest": "^6.3.3",
     "unplugin-swc": "^1.4.3",
     "zod": "^3.21.4",
