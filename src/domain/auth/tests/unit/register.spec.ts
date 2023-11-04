@@ -26,7 +26,14 @@ describe("Register Use Case", () => {
   it("should hash user password upon registration", async () => {
     const user = await sut.execute(mockUser);
 
-    const isPasswordCorrectlyHashed = await compare("123456", user.password);
+    if (user.isLeft()) {
+      throw Error;
+    }
+
+    const isPasswordCorrectlyHashed = await compare(
+      "123456",
+      user.value.user.password
+    );
 
     expect(isPasswordCorrectlyHashed).toBe(true);
   });
@@ -34,8 +41,8 @@ describe("Register Use Case", () => {
   it("should not be able to register a user with the same email twice", async () => {
     await sut.execute(mockUser);
 
-    await expect(() => sut.execute(mockUser)).rejects.toBeInstanceOf(
-      UserAlreadyExistsError
-    );
+    const response = await sut.execute(mockUser);
+
+    expect(response.value).toBeInstanceOf(UserAlreadyExistsError);
   });
 });

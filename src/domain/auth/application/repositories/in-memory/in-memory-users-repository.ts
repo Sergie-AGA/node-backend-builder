@@ -7,7 +7,6 @@ export class InMemoryUsersRepository implements IUsersRepository {
 
   async create(data: User) {
     this.items.push(data);
-
     return data;
   }
 
@@ -19,8 +18,8 @@ export class InMemoryUsersRepository implements IUsersRepository {
     return this.items[index];
   }
 
-  async findById(id: UniqueEntityID) {
-    const user = this.items.find((item) => item.id === id);
+  async findById(id: string) {
+    const user = this.items.find((item) => item.id.toString() === id);
 
     if (!user) {
       return null;

@@ -1,6 +1,6 @@
 import { expect, describe, it, beforeEach } from "vitest";
 import { createTransport } from "nodemailer";
-import { RegisterUseCase } from "@/domain/auth/useCases/register";
+import { RegisterUseCase } from "@/domain/auth/application/useCases/register";
 // import { SendMailUseCase } from "@/domain/mail/use-cases/send-mail";
 import { InMemoryUsersRepository } from "@/domain/auth/application/repositories/in-memory/in-memory-users-repository";
 
