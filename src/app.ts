@@ -4,6 +4,7 @@ import { ZodError } from "zod";
 import { env } from "./env";
 import fastifyJwt from "@fastify/jwt";
 import { routes } from "./routes";
+import { config } from "dotenv";
 
 export const app = fastify();
 

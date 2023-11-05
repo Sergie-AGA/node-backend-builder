@@ -27,19 +27,28 @@ describe("Confirm User Use Case", () => {
     expect(status).toBe("active");
   });
 
-  it.skip("should hash user password upon registration", async () => {
-    const user = await sut.execute(mockUser);
+  it("should not be able to confirm a non-existing user", async () => {
+    let user = User.create({ ...mockUser, status: "registered" });
 
-    const isPasswordCorrectlyHashed = await compare("123456", user.password);
+    inMemoryUsersRepository.items.push(user);
 
-    expect(isPasswordCorrectlyHashed).toBe(true);
+    const response = await sut.execute("123");
+
+    const error = response.value;
+
+    expect(error).toBeInstanceOf(UserNotFoundError);
   });
 
-  it.skip("should not be able to register a user with the same email twice", async () => {
-    await sut.execute(mockUser);
+  it("should not be able to confirm a user for the second time", async () => {
+    let user = User.create({ ...mockUser, status: "registered" });
 
-    await expect(() => sut.execute(mockUser)).rejects.toBeInstanceOf(
-      UserAlreadyExistsError
-    );
+    inMemoryUsersRepository.items.push(user);
+
+    await sut.execute(user.id.toString());
+    const response = await sut.execute(user.id.toString());
+
+    const error = response.value;
+
+    expect(error).toBeInstanceOf(UserAlreadyActiveError);
   });
 });

@@ -3,12 +3,9 @@ import { config } from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import { randomUUID } from "node:crypto";
 import { execSync } from "node:child_process";
-import { DomainEvents } from "@/domain/core/events/domain-events";
+// import { DomainEvents } from "@/domain/core/events/domain-events";
 // import { Redis } from 'ioredis'
 import { envSchema } from "./envSchema";
-
-config({ path: ".env", override: true });
-config({ path: ".env.test", override: true });
 
 const env = envSchema.parse(process.env);
 
@@ -18,7 +15,6 @@ const prisma = new PrismaClient();
 //   port: env.REDIS_PORT,
 //   db: env.REDIS_DB,
 // })
-
 function generateUniqueDatabaseURL(schemaId: string) {
   if (!env.DATABASE_URL) {
     throw new Error("Please provider a DATABASE_URL environment variable");
@@ -38,7 +34,7 @@ beforeAll(async () => {
 
   process.env.DATABASE_URL = databaseURL;
 
-  DomainEvents.shouldRun = false;
+  // DomainEvents.shouldRun = false;
 
   // await redis.flushdb()
 

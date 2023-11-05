@@ -2,6 +2,9 @@ import request from "supertest";
 import { app } from "@/app";
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { mockUser } from "../mocks/mockUser";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 describe("Register (e2e)", async () => {
   beforeAll(async () => {
