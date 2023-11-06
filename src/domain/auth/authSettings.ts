@@ -36,6 +36,7 @@ export class RegisterHandler {
   }
 }
 
+// Confirm
 export class ConfirmHandler {
   static get repository() {
     return PrismaUsersRepository;
@@ -47,5 +48,24 @@ export class ConfirmHandler {
 
   static presenter(user: User) {
     return UserPresenter.toHTTPEmail(user);
+  }
+}
+
+// Login
+export class LoginHandler {
+  static get repository() {
+    return PrismaUsersRepository;
+  }
+  static validate(data: unknown) {
+    const schema = new ZodValidationPipe(registerBodySchema);
+    return schema.transform(data);
+  }
+
+  // static presenter(user: User) {
+  //   return UserPresenter.toHTTPEmail(user);
+  // }
+
+  static hash(password: string) {
+    return HasherProvider.hash(password);
   }
 }
