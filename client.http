@@ -5,7 +5,7 @@ POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "email": "test@example123.com",
+  "email": "test@example.com",
   "password": "123456"
 }
 
@@ -16,16 +16,16 @@ POST {{baseUrl}}/auth/confirm
 Content-Type: application/json
 
 {
-  "id": "2edb41f3-331a-4da1-a7a5-8c8a4c4d9a86"
+  "id": "f7be122e-0eee-4ed0-ba40-56aab7ed443e"
 }
 
-# ###
+###
 
-# # @name authenticate
-# POST {{baseUrl}}/sessions
-# Content-Type: application/json
+# @name authenticate
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
 
-# {
-#   "email": "test@example.com",
-#   "password": "123456"
-# }
+{
+  "email": "test@example.com",
+  "password": "123456"
+}

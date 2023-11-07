@@ -11,6 +11,7 @@ const registerBodySchema = z.object({
   password: z.string().min(6),
 });
 export type RegisterBodySchema = z.infer<typeof registerBodySchema>;
+export type LoginBodySchema = z.infer<typeof registerBodySchema>;
 
 const confirmBodySchema = z.object({
   id: z.string(),
@@ -28,7 +29,7 @@ export class RegisterHandler {
   }
 
   static presenter(user: User) {
-    return UserPresenter.toHTTPEmail(user);
+    return UserPresenter.toHTTPWithEmail(user);
   }
 
   static hash(password: string) {
@@ -47,7 +48,7 @@ export class ConfirmHandler {
   }
 
   static presenter(user: User) {
-    return UserPresenter.toHTTPEmail(user);
+    return UserPresenter.toHTTPWithEmail(user);
   }
 }
 
@@ -65,7 +66,7 @@ export class LoginHandler {
   //   return UserPresenter.toHTTPEmail(user);
   // }
 
-  static hash(password: string) {
-    return HasherProvider.hash(password);
+  static compare(password: string, hashedPassword: string) {
+    return HasherProvider.compare(password, hashedPassword);
   }
 }

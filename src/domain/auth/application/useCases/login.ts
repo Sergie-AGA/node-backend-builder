@@ -1,16 +1,17 @@
-import { RegisterHandler } from "../../authSettings";
+import { LoginHandler } from "../../authSettings";
 import { IUsersRepository } from "@/domain/auth/application/repositories/IUsersRepository";
-import { UserAlreadyExistsError } from "@/domain/auth/application/useCases/errors/userAlreadyExists";
 import { User } from "../../enterprise/entities/user";
-import { RegisterBodySchema } from "../../authSettings";
+import { LoginBodySchema } from "../../authSettings";
 import {
   Either,
   right,
   left,
 } from "@/domain/core/utils/functionalErrorHandling/either";
+import { InvalidCredentialsError } from "./errors/invalid-credentials-error";
+import { UserNotActiveError } from "./errors/userNotActive";
 
-type RegisterUseCaseResponse = Either<
-  UserAlreadyExistsError,
+type LoginUseCaseResponse = Either<
+  InvalidCredentialsError | UserNotActiveError,
   {
     user: User;
   }
@@ -19,25 +20,25 @@ type RegisterUseCaseResponse = Either<
 export class LoginUseCase {
   constructor(private usersRepository: IUsersRepository) {}
 
-  async execute(
-    userData: RegisterBodySchema
-  ): Promise<RegisterUseCaseResponse> {
-    const userWithSameEmail = await this.usersRepository.findByEmail(
-      userData.email
-    );
+  async execute(userData: LoginBodySchema): Promise<LoginUseCaseResponse> {
+    const user = await this.usersRepository.findByEmail(userData.email);
 
-    if (userWithSameEmail) {
-      return left(new UserAlreadyExistsError(userData.email));
+    if (!user) {
+      return left(new InvalidCredentialsError());
     }
 
-    const password_hash = await RegisterHandler.hash(userData.password);
+    const isPasswordValid = await LoginHandler.compare(
+      userData.password,
+      user.password
+    );
 
-    const user = User.create({
-      ...userData,
-      password: password_hash,
-    });
+    if (!isPasswordValid) {
+      return left(new InvalidCredentialsError());
+    }
 
-    await this.usersRepository.create(user);
+    if (user.status !== "active") {
+      return left(new UserNotActiveError(userData.email));
+    }
 
     return right({ user });
   }

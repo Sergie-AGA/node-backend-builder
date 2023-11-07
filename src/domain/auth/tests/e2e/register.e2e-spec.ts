@@ -9,7 +9,7 @@ describe("Register (e2e)", async () => {
   });
   afterAll(async () => await app.close());
 
-  it.skip("should be able to register", async () => {
+  it("should be able to register", async () => {
     const response = await request(app.server)
       .post("/auth/register")
       .send(mockUser);

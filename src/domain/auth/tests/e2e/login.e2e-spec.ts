@@ -10,15 +10,23 @@ describe("Login (E2E)", () => {
   afterAll(async () => await app.close());
 
   it("should be able to log in", async () => {
-    await request(app.server).post("/auth/register").send(mockUser);
+    const registeredUser = await request(app.server)
+      .post("/auth/register")
+      .send(mockUser);
+
+    const resp1 = await request(app.server)
+      .post("/auth/confirm")
+      .send({ id: registeredUser.body.attributes.id });
 
     const response = await request(app.server)
       .post("/auth/login")
       .send(mockUser);
 
-    expect(response.statusCode).toEqual(201);
+    expect(response.statusCode).toEqual(200);
     expect(response.body).toEqual({
-      access_token: expect.any(String),
+      attributes: {
+        token: expect.any(String),
+      },
     });
   });
 });

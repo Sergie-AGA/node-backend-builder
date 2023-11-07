@@ -19,9 +19,22 @@ export async function login(req: FastifyRequest, res: FastifyReply) {
       throw response.value;
     }
 
-    const user = response.value.user;
+    const user = response.value?.user;
 
-    return res.status(201).send({ attributes: LoginHandler.presenter(user) });
+    const token = await res.jwtSign(
+      {},
+      {
+        sign: {
+          sub: user.id.toString(),
+        },
+      }
+    );
+
+    return res.status(200).send({
+      attributes: {
+        token,
+      },
+    });
   } catch (err) {
     if (err instanceof UserNotActiveError) {
       return res.status(403).send({ error: err.message });
