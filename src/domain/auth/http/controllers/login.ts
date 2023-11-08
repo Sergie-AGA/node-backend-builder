@@ -30,11 +30,31 @@ export async function login(req: FastifyRequest, res: FastifyReply) {
       }
     );
 
-    return res.status(200).send({
-      attributes: {
-        token,
+    const refreshToken = await res.jwtSign(
+      {
+        role: user.role,
       },
-    });
+      {
+        sign: {
+          sub: user.id.toString(),
+          expiresIn: "7d",
+        },
+      }
+    );
+
+    return res
+      .setCookie("refreshToken", refreshToken, {
+        path: "/",
+        secure: true,
+        sameSite: true,
+        httpOnly: true,
+      })
+      .status(200)
+      .send({
+        attributes: {
+          token,
+        },
+      });
   } catch (err) {
     if (err instanceof UserNotActiveError) {
       return res.status(403).send({ error: err.message });

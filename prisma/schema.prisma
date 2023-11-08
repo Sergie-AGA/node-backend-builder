@@ -16,10 +16,16 @@ enum AccountStatus {
   disabled
 }
 
+enum Role {
+  admin
+  member
+}
+
 model User {
   id             String        @id @default(uuid())
   email          String        @unique
   password_hash  String
+  role           Role          @default(member)
   account_status AccountStatus @default(registered)
   created_at     DateTime      @default(now())
   updated_at     DateTime      @default(now())

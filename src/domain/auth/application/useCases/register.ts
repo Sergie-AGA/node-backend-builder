@@ -36,7 +36,6 @@ export class RegisterUseCase {
       ...userData,
       password: password_hash,
     });
-
     await this.usersRepository.create(user);
 
     return right({ user });

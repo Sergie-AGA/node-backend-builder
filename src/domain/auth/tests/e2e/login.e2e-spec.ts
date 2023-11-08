@@ -14,7 +14,7 @@ describe("Login (E2E)", () => {
       .post("/auth/register")
       .send(mockUser);
 
-    const resp1 = await request(app.server)
+    await request(app.server)
       .post("/auth/confirm")
       .send({ id: registeredUser.body.attributes.id });
 

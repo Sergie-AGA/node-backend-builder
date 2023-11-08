@@ -4,6 +4,7 @@ import { UniqueEntityID } from "@/domain/core/entities/unique-entity-id";
 interface IUser {
   email: string;
   password: string;
+  role?: "member" | "admin";
   status?: "registered" | "active" | "disabled";
 }
 
@@ -18,6 +19,10 @@ export class User extends Entity<IUser> {
 
   get status() {
     return this.props.status;
+  }
+
+  get role() {
+    return this.props.role;
   }
 
   set status(updatedStatus) {

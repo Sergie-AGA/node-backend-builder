@@ -1,20 +1,15 @@
-// import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { User } from "@/domain/auth/enterprise/entities/user";
 import { IUsersRepository } from "../IUsersRepository";
 import { PrismaUserMapper } from "./mappers/PrismaUserMapper";
-import { PrismaClient } from "@prisma/client";
 
 export class PrismaUsersRepository implements IUsersRepository {
-  private prisma;
-
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
+  constructor() {}
 
   async create(user: User): Promise<User> {
     const data = PrismaUserMapper.toPrisma(user);
 
-    await this.prisma.user.create({
+    await prisma.user.create({
       data,
     });
 
@@ -22,7 +17,7 @@ export class PrismaUsersRepository implements IUsersRepository {
   }
 
   async validateUser(id: string) {
-    const response = await this.prisma.user.update({
+    const response = await prisma.user.update({
       where: {
         id: id.toString(),
       },
@@ -37,7 +32,7 @@ export class PrismaUsersRepository implements IUsersRepository {
   }
 
   async findById(id: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id,
       },
@@ -51,7 +46,7 @@ export class PrismaUsersRepository implements IUsersRepository {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         email,
       },

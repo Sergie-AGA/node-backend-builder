@@ -1,11 +1,12 @@
 @baseUrl = http://localhost:3333
+@userId = {{register_account.response.body.attributes.id}}
 
 # @name register_account
 POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
+  "email": "test@exampleeeeeeee.com",
   "password": "123456"
 }
 
@@ -16,13 +17,24 @@ POST {{baseUrl}}/auth/confirm
 Content-Type: application/json
 
 {
-  "id": "f7be122e-0eee-4ed0-ba40-56aab7ed443e"
+  "id": "{{userId}}"
 }
 
 ###
 
 # @name authenticate
 POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{ 
+  "email": "test@example.com",
+  "password": "123456"
+}
+
+###
+
+# @name refresh_token
+PATCH {{baseUrl}}/auth/token/refresh
 Content-Type: application/json
 
 {
