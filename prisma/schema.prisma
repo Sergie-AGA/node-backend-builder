@@ -29,6 +29,22 @@ model User {
   account_status AccountStatus @default(registered)
   created_at     DateTime      @default(now())
   updated_at     DateTime      @default(now())
+  UserTokens     UserTokens[]
 
   @@map("users")
+}
+
+enum TokenType {
+  PASSWORD_RESET
+  ACCOUNT_CONFIRMATION
+}
+
+model UserTokens {
+  id                 Int       @id @default(autoincrement())
+  user               User      @relation(fields: [userId], references: [id])
+  userId             String
+  token              String    @unique
+  type               TokenType
+  expirationDateTime DateTime
+  used               Boolean   @default(false)
 }

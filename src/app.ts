@@ -4,7 +4,9 @@ import { ZodError } from "zod";
 import { env } from "./env";
 import fastifyJwt from "@fastify/jwt";
 import { routes } from "./routes";
-import { config } from "dotenv";
+import fastifySwagger from "@fastify/swagger";
+import fastifySwaggerUi from "@fastify/swagger-ui";
+import { swaggerOptions, swaggerUiOptions } from "./lib/swagger-setup";
 
 export const app = fastify();
 
@@ -21,11 +23,16 @@ app.register(fastifyJwt, {
   },
 });
 
+// Docs
+app.register(fastifySwagger, swaggerOptions);
+app.register(fastifySwaggerUi, swaggerUiOptions);
+
 // Routes
 routes.forEach((route) => {
   app.register(route.handler, { prefix: route.prefix });
 });
 
+// Error handling
 app.setErrorHandler((err, _, res) => {
   if (err instanceof ZodError) {
     return res
