@@ -1,7 +1,7 @@
-import { DomainEvent } from "./domain-event";
-import { UniqueEntityID } from "../entities/unique-entity-id";
-import { AggregateRoot } from "../entities/aggregate-root";
-import { DomainEvents } from "@/domain/core/events/domain-events";
+import { DomainEvent } from "./domainEvent";
+import { UniqueEntityID } from "../entities/uniqueEntityId";
+import { AggregateRoot } from "../entities/aggregateRoot";
+import { DomainEvents } from "@/domain/core/events/domainEvents";
 import { describe, it, expect } from "vitest";
 
 import { vi } from "vitest";

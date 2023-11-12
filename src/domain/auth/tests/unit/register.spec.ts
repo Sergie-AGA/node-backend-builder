@@ -1,7 +1,7 @@
 import { expect, describe, it, beforeEach } from "vitest";
 import { RegisterUseCase } from "@/domain/auth/application/useCases/register";
 import { compare } from "bcryptjs";
-import { InMemoryUsersRepository } from "@/domain/auth/application/repositories/in-memory/in-memory-users-repository";
+import { InMemoryUsersRepository } from "@/domain/auth/application/repositories/in-memory/inMemoryUsersRepository";
 import { UserAlreadyExistsError } from "@/domain/auth/application/useCases/errors/userAlreadyExists";
 import { mockUser } from "../mocks/mockUser";
 

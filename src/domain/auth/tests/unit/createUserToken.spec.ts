@@ -9,6 +9,8 @@ import { User } from "../../enterprise/entities/user";
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let sut: ConfirmUserUseCase;
 
+// can't create preexisting token, can create token
+
 describe("Confirm User Use Case", () => {
   beforeEach(() => {
     inMemoryUsersRepository = new InMemoryUsersRepository();

@@ -1,4 +1,4 @@
-import { UniqueEntityID } from "@/domain/core/entities/unique-entity-id";
+import { UniqueEntityID } from "@/domain/core/entities/uniqueEntityId";
 import { User } from "../../enterprise/entities/user";
 
 export interface IUsersRepository {

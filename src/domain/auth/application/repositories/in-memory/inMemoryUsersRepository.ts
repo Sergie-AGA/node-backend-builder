@@ -1,6 +1,6 @@
 import { User } from "@/domain/auth/enterprise/entities/user";
 import { IUsersRepository } from "../IUsersRepository";
-import { UniqueEntityID } from "@/domain/core/entities/unique-entity-id";
+import { UniqueEntityID } from "@/domain/core/entities/uniqueEntityId";
 
 export class InMemoryUsersRepository implements IUsersRepository {
   public items: User[] = [];

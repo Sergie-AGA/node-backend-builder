@@ -1,6 +1,6 @@
 import { expect, describe, it, beforeEach } from "vitest";
 import { LoginUseCase } from "@/domain/auth/application/useCases/login";
-import { InMemoryUsersRepository } from "@/domain/auth/application/repositories/in-memory/in-memory-users-repository";
+import { InMemoryUsersRepository } from "@/domain/auth/application/repositories/in-memory/inMemoryUsersRepository";
 import { mockUser } from "../mocks/mockUser";
 import { User } from "../../enterprise/entities/user";
 import { RegisterHandler } from "../../authSettings";

@@ -1,5 +1,5 @@
 import { Entity } from "@/domain/core/entities/entity";
-import { UniqueEntityID } from "@/domain/core/entities/unique-entity-id";
+import { UniqueEntityID } from "@/domain/core/entities/uniqueEntityId";
 import { z } from "zod";
 
 interface emailProps {

@@ -1,4 +1,4 @@
-import { UseCaseError } from "@/domain/core/errors/use-case-error-interface";
+import { UseCaseError } from "@/domain/core/errors/useCaseErrorInterface";
 
 export class UserNotActiveError extends Error implements UseCaseError {
   constructor(identifier: string) {

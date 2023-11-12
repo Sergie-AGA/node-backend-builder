@@ -1,4 +1,4 @@
-import { UseCaseError } from "@/domain/core/errors/use-case-error-interface";
+import { UseCaseError } from "@/domain/core/errors/useCaseErrorInterface";
 
 export class ResourceNotFoundError extends Error implements UseCaseError {
   constructor() {

@@ -1,4 +1,4 @@
-import { WatchedList } from "@/domain/core/entities/watched-list";
+import { WatchedList } from "@/domain/core/entities/watchedList";
 import { describe, it, expect } from "vitest";
 
 class NumberWatchedList extends WatchedList<number> {

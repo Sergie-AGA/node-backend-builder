@@ -1,5 +1,6 @@
-import { Entity } from "@/domain/core/entities/entity";
-import { UniqueEntityID } from "@/domain/core/entities/unique-entity-id";
+import { AggregateRoot } from "@/domain/core/entities/aggregateRoot";
+import { UniqueEntityID } from "@/domain/core/entities/uniqueEntityId";
+import { UserCreatedEvent } from "../events/userCreatedEvent";
 
 interface IUser {
   email: string;
@@ -8,7 +9,7 @@ interface IUser {
   status?: "registered" | "active" | "disabled";
 }
 
-export class User extends Entity<IUser> {
+export class User extends AggregateRoot<IUser> {
   get email() {
     return this.props.email;
   }
@@ -31,6 +32,12 @@ export class User extends Entity<IUser> {
 
   static create(props: IUser, id?: UniqueEntityID) {
     const user = new User(props, id);
+
+    const isNewUser = !id;
+
+    if (isNewUser) {
+      user.addDomainEvent(new UserCreatedEvent(user));
+    }
 
     return user;
   }

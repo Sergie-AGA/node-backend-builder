@@ -1,6 +1,6 @@
-import { AggregateRoot } from "../entities/aggregate-root";
-import { UniqueEntityID } from "../entities/unique-entity-id";
-import { DomainEvent } from "./domain-event";
+import { AggregateRoot } from "../entities/aggregateRoot";
+import { UniqueEntityID } from "../entities/uniqueEntityId";
+import { DomainEvent } from "./domainEvent";
 
 type DomainEventCallback = (event: unknown) => void;
 

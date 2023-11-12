@@ -27,24 +27,30 @@ model User {
   password_hash  String
   role           Role          @default(member)
   account_status AccountStatus @default(registered)
-  created_at     DateTime      @default(now())
-  updated_at     DateTime      @default(now())
-  UserTokens     UserTokens[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  UserTokens UserToken[]
 
   @@map("users")
 }
 
 enum TokenType {
-  PASSWORD_RESET
-  ACCOUNT_CONFIRMATION
+  password_reset
+  account_confirmation
 }
 
-model UserTokens {
-  id                 Int       @id @default(autoincrement())
-  user               User      @relation(fields: [userId], references: [id])
+model UserToken {
+  id                 String    @id @default(uuid())
   userId             String
-  token              String    @unique
   type               TokenType
   expirationDateTime DateTime
-  used               Boolean   @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("userTokens")
 }
