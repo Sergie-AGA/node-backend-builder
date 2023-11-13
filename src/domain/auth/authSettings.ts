@@ -19,6 +19,7 @@ const confirmBodySchema = z.object({
 export type ConfirmBodySchema = z.infer<typeof confirmBodySchema>;
 
 const tokenBodySchema = z.object({
+  id: z.string().optional(),
   userId: z.string(),
   type: z.enum(["password_reset", "account_confirmation"]),
 });
