@@ -4,11 +4,11 @@ import { confirm } from "./confirmUser";
 import { login } from "./login";
 import { refresh } from "./refresh";
 import { registerDocs } from "../../docs/authDocs";
-import { forgotPassword } from "./forgotPassword";
+import { createToken } from "./createToken";
 
 export async function authRoutes(app: FastifyInstance) {
   app.post("/register", registerDocs, register);
-  app.post("/forgot-password", forgotPassword);
+  app.post("/user-token/create", createToken);
   app.post("/confirm", confirm);
   app.post("/login", login);
   app.patch("/token/refresh", refresh);

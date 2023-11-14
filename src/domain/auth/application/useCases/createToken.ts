@@ -15,7 +15,7 @@ type CreateTokenUseCaseResponse = Either<
   }
 >;
 
-export class CreateTokenUserUseCase {
+export class CreateTokenUseCase {
   constructor(private userTokensRepository: IUserTokensRepository) {}
 
   async execute(

@@ -5,6 +5,7 @@ import { HasherProvider } from "@/services/cryptography/HasherProvider";
 import { UserPresenter } from "./http/presenters/userPresenter";
 import { User } from "./enterprise/entities/user";
 import { OnUserCreated } from "./application/subscribers/onUserCreated";
+import { PrismaUserTokensRepository } from "./application/repositories/prisma/PrismaUserTokensRepository";
 
 const registerBodySchema = z.object({
   email: z.string().email(),
@@ -25,17 +26,10 @@ const tokenBodySchema = z.object({
 });
 export type TokenBodySchema = z.infer<typeof tokenBodySchema>;
 
-//General
-export class generalAuthSettings {
-  static get repository() {
-    return PrismaUsersRepository;
-  }
-}
-
 // Register
 export class RegisterHandler {
   static get repository() {
-    return generalAuthSettings.repository;
+    return PrismaUsersRepository;
   }
   static validate(data: unknown) {
     const schema = new ZodValidationPipe(registerBodySchema);
@@ -56,7 +50,7 @@ export class RegisterHandler {
 // Confirm
 export class ConfirmHandler {
   static get repository() {
-    return generalAuthSettings.repository;
+    return PrismaUsersRepository;
   }
   static validate(data: unknown) {
     const schema = new ZodValidationPipe(confirmBodySchema);
@@ -71,7 +65,7 @@ export class ConfirmHandler {
 // Login
 export class LoginHandler {
   static get repository() {
-    return generalAuthSettings.repository;
+    return PrismaUsersRepository;
   }
   static validate(data: unknown) {
     const schema = new ZodValidationPipe(registerBodySchema);
@@ -92,6 +86,9 @@ export class TokenHandler {
   static validate(data: unknown) {
     const schema = new ZodValidationPipe(tokenBodySchema);
     return schema.transform(data);
+  }
+  static get repository() {
+    return PrismaUserTokensRepository;
   }
   static get confirmationTokenHoursToExpiration() {
     return 72;
