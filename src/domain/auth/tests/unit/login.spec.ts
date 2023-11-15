@@ -4,7 +4,7 @@ import { InMemoryUsersRepository } from "@/domain/auth/application/repositories/
 import { mockUser } from "../mocks/mockUser";
 import { User } from "../../enterprise/entities/user";
 import { RegisterHandler } from "../../authSettings";
-import { InvalidCredentialsError } from "../../application/useCases/errors/invalid-credentials-error";
+import { InvalidCredentialsError } from "../../application/useCases/errors/invalidCredentialsError";
 import { UserNotActiveError } from "../../application/useCases/errors/userNotActive";
 
 let usersRepository: InMemoryUsersRepository;

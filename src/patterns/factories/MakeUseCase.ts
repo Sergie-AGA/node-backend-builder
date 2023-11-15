@@ -1,12 +1,8 @@
-// This file implements the factory pattern
-export function makeUseCase<Repo, UC>(
-  Repository: new () => Repo,
-  UseCase: new (repository: Repo) => UC
+export function makeUseCase<UC, Repos extends any[]>(
+  UseCase: new (...repos: Repos) => UC,
+  ...repositories: { new (): Repos[number] }[]
 ) {
-  // Define database/model to use
-  const repository = new Repository();
-  // Run execution
-  const useCase = new UseCase(repository);
-
+  const repoInstances = repositories.map((Repository) => new Repository());
+  const useCase = new UseCase(...(repoInstances as Repos));
   return useCase;
 }

@@ -7,7 +7,7 @@ import {
   right,
   left,
 } from "@/domain/core/utils/functionalErrorHandling/either";
-import { InvalidCredentialsError } from "./errors/invalid-credentials-error";
+import { InvalidCredentialsError } from "./errors/invalidCredentialsError";
 import { UserNotActiveError } from "./errors/userNotActive";
 
 type LoginUseCaseResponse = Either<

@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { User } from "@/domain/auth/enterprise/entities/user";
-import { IUsersRepository } from "../IUsersRepository";
+import { IChangePasswordRequest, IUsersRepository } from "../IUsersRepository";
 import { PrismaUserMapper } from "./mappers/PrismaUserMapper";
 
 export class PrismaUsersRepository implements IUsersRepository {
@@ -14,6 +14,17 @@ export class PrismaUsersRepository implements IUsersRepository {
     });
 
     return user;
+  }
+
+  async save(passwordData: IChangePasswordRequest): Promise<void> {
+    await prisma.user.update({
+      where: {
+        id: passwordData.id,
+      },
+      data: {
+        password_hash: passwordData.password,
+      },
+    });
   }
 
   async validateUser(id: string) {

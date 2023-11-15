@@ -1,34 +1,32 @@
-import { IUsersRepository } from "@/domain/auth/application/repositories/IUsersRepository";
-import { UserAlreadyActiveError } from "./errors/userAlreadyActive";
-import { User } from "../../enterprise/entities/user";
+import { IUserTokensRepository } from "../repositories/IUserTokensRepository";
+import { ResourceAlreadyExistsError } from "@/domain/core/errors/resourceAlreadyExistsError";
+import {
+  ChangePasswordBodySchema,
+  ChangePasswordHandler,
+  TokenBodySchema,
+} from "../../authSettings";
 import { UserNotFoundError } from "./errors/userNotFound";
 import {
-  Either,
   right,
   left,
+  Either,
 } from "@/domain/core/utils/functionalErrorHandling/either";
-import { IUserTokensRepository } from "../repositories/IUserTokensRepository";
-import { ConfirmBodySchema } from "../../authSettings";
-import { DateProvider } from "@/services/dateProvider/dateProvider";
-import { ResourceNotFoundError } from "@/domain/core/errors/resourceNotFoundError";
+import { IUsersRepository } from "../repositories/IUsersRepository";
 import { UserStatusNotAllowed } from "./errors/userStatusNotAllowed";
+import { ResourceNotFoundError } from "@/domain/core/errors/resourceNotFoundError";
+import { DateProvider } from "@/services/dateProvider/dateProvider";
 
-type ConfirmUserUseCaseResponse = Either<
-  UserNotFoundError | UserAlreadyActiveError,
-  {
-    updatedUser: User;
-  }
->;
+type ChangePasswordUseCaseResponse = Either<ResourceAlreadyExistsError, null>;
 
-export class ConfirmUserUseCase {
+export class ChangePasswordUseCase {
   constructor(
     private userTokensRepository: IUserTokensRepository,
     private usersRepository: IUsersRepository
   ) {}
 
   async execute(
-    changePasswordData: ConfirmBodySchema
-  ): Promise<ConfirmUserUseCaseResponse> {
+    changePasswordData: ChangePasswordBodySchema
+  ): Promise<ChangePasswordUseCaseResponse> {
     const token = await this.userTokensRepository.findById(
       changePasswordData.tokenId
     );
@@ -51,14 +49,19 @@ export class ConfirmUserUseCase {
       return left(new UserNotFoundError(changePasswordData.userId));
     }
 
-    if (user.status !== "registered") {
+    if (user.status == "registered") {
       return left(new UserStatusNotAllowed(changePasswordData.userId));
     }
 
-    const updatedUser = await this.usersRepository.validateUser(
-      user.id.toString()
+    const password_hash = await ChangePasswordHandler.hash(
+      changePasswordData.password
     );
 
-    return right({ updatedUser });
+    await this.usersRepository.save({
+      id: user.id.toString(),
+      password: password_hash,
+    });
+
+    return right(null);
   }
 }

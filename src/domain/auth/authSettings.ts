@@ -15,9 +15,17 @@ export type RegisterBodySchema = z.infer<typeof registerBodySchema>;
 export type LoginBodySchema = z.infer<typeof registerBodySchema>;
 
 const confirmBodySchema = z.object({
-  id: z.string(),
+  tokenId: z.string(),
+  userId: z.string(),
 });
 export type ConfirmBodySchema = z.infer<typeof confirmBodySchema>;
+
+const changePasswordBodySchema = z.object({
+  tokenId: z.string(),
+  userId: z.string(),
+  password: z.string().min(6),
+});
+export type ChangePasswordBodySchema = z.infer<typeof changePasswordBodySchema>;
 
 const tokenBodySchema = z.object({
   id: z.string().optional(),
@@ -49,7 +57,10 @@ export class RegisterHandler {
 
 // Confirm
 export class ConfirmHandler {
-  static get repository() {
+  static get tokenRepository() {
+    return PrismaUserTokensRepository;
+  }
+  static get userRepository() {
     return PrismaUsersRepository;
   }
   static validate(data: unknown) {
@@ -81,14 +92,34 @@ export class LoginHandler {
   }
 }
 
+// Change password
+export class ChangePasswordHandler {
+  static get tokenRepository() {
+    return PrismaUserTokensRepository;
+  }
+  static get userRepository() {
+    return PrismaUsersRepository;
+  }
+  static validate(data: unknown) {
+    const schema = new ZodValidationPipe(changePasswordBodySchema);
+    return schema.transform(data);
+  }
+  static hash(password: string) {
+    return HasherProvider.hash(password);
+  }
+}
+
 // User Token
 export class TokenHandler {
   static validate(data: unknown) {
     const schema = new ZodValidationPipe(tokenBodySchema);
     return schema.transform(data);
   }
-  static get repository() {
+  static get tokenRepository() {
     return PrismaUserTokensRepository;
+  }
+  static get userRepository() {
+    return PrismaUsersRepository;
   }
   static get confirmationTokenHoursToExpiration() {
     return 72;

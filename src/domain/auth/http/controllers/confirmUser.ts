@@ -8,12 +8,13 @@ import { UserAlreadyActiveError } from "../../application/useCases/errors/userAl
 
 export async function confirm(req: FastifyRequest, res: FastifyReply) {
   try {
-    const { id } = ConfirmHandler.validate(req.body);
+    const confirmUserData = ConfirmHandler.validate(req.body);
 
     const response = await makeUseCase(
-      ConfirmHandler.repository,
-      ConfirmUserUseCase
-    ).execute(id);
+      ConfirmUserUseCase,
+      ConfirmHandler.tokenRepository,
+      ConfirmHandler.userRepository
+    ).execute(confirmUserData);
 
     if (response.isLeft()) {
       throw response.value;

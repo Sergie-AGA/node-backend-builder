@@ -12,8 +12,8 @@ export async function register(req: FastifyRequest, res: FastifyReply) {
     const userRaw = RegisterHandler.validate(req.body);
 
     const response = await makeUseCase(
-      RegisterHandler.repository,
-      RegisterUseCase
+      RegisterUseCase,
+      RegisterHandler.repository
     ).execute(userRaw);
 
     if (response.isLeft()) {

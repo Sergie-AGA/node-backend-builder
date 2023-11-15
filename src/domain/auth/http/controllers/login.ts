@@ -4,15 +4,15 @@ import { makeUseCase } from "@/patterns/factories/MakeUseCase";
 import { LoginUseCase } from "../../application/useCases/login";
 import { genericError } from "@/domain/core/errors/genericError";
 import { UserNotActiveError } from "../../application/useCases/errors/userNotActive";
-import { InvalidCredentialsError } from "../../application/useCases/errors/invalid-credentials-error";
+import { InvalidCredentialsError } from "../../application/useCases/errors/invalidCredentialsError";
 
 export async function login(req: FastifyRequest, res: FastifyReply) {
   try {
     const userRaw = LoginHandler.validate(req.body);
 
     const response = await makeUseCase(
-      LoginHandler.repository,
-      LoginUseCase
+      LoginUseCase,
+      LoginHandler.repository
     ).execute(userRaw);
 
     if (response.isLeft()) {

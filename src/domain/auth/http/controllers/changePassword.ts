@@ -1,32 +1,30 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { TokenHandler } from "../../authSettings";
+import { ChangePasswordHandler } from "../../authSettings";
 import { makeUseCase } from "@/patterns/factories/MakeUseCase";
 import { genericError } from "@/domain/core/errors/genericError";
-import { ResourceAlreadyExistsError } from "@/domain/core/errors/resourceAlreadyExistsError";
-import { CreateTokenUseCase } from "../../application/useCases/createToken";
+import { ChangePasswordUseCase } from "../../application/useCases/changePassword";
 import { UserNotFoundError } from "../../application/useCases/errors/userNotFound";
 import { UserStatusNotAllowed } from "../../application/useCases/errors/userStatusNotAllowed";
+import { ResourceNotFoundError } from "@/domain/core/errors/resourceNotFoundError";
 
-export async function createToken(req: FastifyRequest, res: FastifyReply) {
+export async function changePassword(req: FastifyRequest, res: FastifyReply) {
   try {
-    const tokenRaw = TokenHandler.validate(req.body);
+    const passwordChangeData = ChangePasswordHandler.validate(req.body);
 
     const response = await makeUseCase(
-      CreateTokenUseCase,
-      TokenHandler.tokenRepository,
-      TokenHandler.userRepository
-    ).execute(tokenRaw);
+      ChangePasswordUseCase,
+      ChangePasswordHandler.tokenRepository,
+      ChangePasswordHandler.userRepository
+    ).execute(passwordChangeData);
 
     if (response.isLeft()) {
       throw response.value;
     }
 
-    // const token = response.value.token;
-
-    return res.status(201).send();
+    return res.status(200).send();
   } catch (err) {
-    if (err instanceof ResourceAlreadyExistsError) {
-      return res.status(409).send({ error: err.message });
+    if (err instanceof ResourceNotFoundError) {
+      return res.status(404).send({ error: err.message });
     }
     if (err instanceof UserNotFoundError) {
       return res.status(404).send({ error: err.message });
