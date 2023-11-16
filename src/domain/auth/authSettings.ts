@@ -4,8 +4,10 @@ import { PrismaUsersRepository } from "@/domain/auth/application/repositories/pr
 import { HasherProvider } from "@/services/cryptography/HasherProvider";
 import { UserPresenter } from "./http/presenters/userPresenter";
 import { User } from "./enterprise/entities/user";
-import { OnUserCreated } from "./application/subscribers/onUserCreated";
 import { PrismaUserTokensRepository } from "./application/repositories/prisma/PrismaUserTokensRepository";
+import { UserCreatedEvent } from "./enterprise/events/userCreatedEvent";
+import { makeUseCase } from "@/patterns/factories/MakeUseCase";
+import { CreateTokenUseCase } from "./application/useCases/createToken";
 
 const registerBodySchema = z.object({
   email: z.string().email(),
@@ -52,7 +54,13 @@ export class RegisterHandler {
     return HasherProvider.hash(password);
   }
 
-  static handleEvents() {}
+  static get allowUserCreationEvents() {
+    return true;
+  }
+
+  static get userCreationEvents() {
+    return [AuthEventHandler.createUserConfirmationToken];
+  }
 }
 
 // Confirm
@@ -123,5 +131,22 @@ export class TokenHandler {
   }
   static get confirmationTokenHoursToExpiration() {
     return 72;
+  }
+  static get allowTokenDeletionEvents() {
+    return true;
+  }
+}
+
+// Events
+export class AuthEventHandler {
+  static async createUserConfirmationToken(event: unknown): Promise<void> {
+    if (event instanceof UserCreatedEvent) {
+      const { user } = event;
+      await makeUseCase(
+        CreateTokenUseCase,
+        TokenHandler.tokenRepository,
+        TokenHandler.userRepository
+      ).execute({ userId: user.id.toString(), type: "account_confirmation" });
+    }
   }
 }

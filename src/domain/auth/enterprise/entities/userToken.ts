@@ -3,6 +3,8 @@ import { UniqueEntityID } from "@/domain/core/entities/uniqueEntityId";
 import { Optional } from "@/domain/core/types/optional";
 import { DateProvider } from "@/services/dateProvider/dateProvider";
 import { TokenHandler } from "../../authSettings";
+import { DomainEvent } from "@/domain/core/events/domainEvent";
+import { AggregateRoot } from "@/domain/core/entities/aggregateRoot";
 
 interface IUserToken {
   userId: string;
@@ -12,7 +14,7 @@ interface IUserToken {
   updatedAt?: Date | null;
 }
 
-export class UserToken extends Entity<IUserToken> {
+export class UserToken extends AggregateRoot<IUserToken> {
   get userId() {
     return this.props.userId;
   }
@@ -25,11 +27,17 @@ export class UserToken extends Entity<IUserToken> {
     return this.props.expirationDateTime;
   }
 
+  addDeletionEvent(event: DomainEvent) {
+    if (TokenHandler.allowTokenDeletionEvents) {
+      this.addDomainEvent(event);
+    }
+  }
+
   static create(
     props: Optional<IUserToken, "expirationDateTime" | "createdAt">,
     id?: UniqueEntityID
   ) {
-    const user = new UserToken(
+    const userToken = new UserToken(
       {
         ...props,
         expirationDateTime:
@@ -42,6 +50,6 @@ export class UserToken extends Entity<IUserToken> {
       id
     );
 
-    return user;
+    return userToken;
   }
 }

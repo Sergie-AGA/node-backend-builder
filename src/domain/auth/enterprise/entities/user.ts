@@ -1,6 +1,7 @@
 import { AggregateRoot } from "@/domain/core/entities/aggregateRoot";
 import { UniqueEntityID } from "@/domain/core/entities/uniqueEntityId";
-import { UserCreatedEvent } from "../events/userCreatedEvent";
+import { DomainEvent } from "@/domain/core/events/domainEvent";
+import { RegisterHandler } from "../../authSettings";
 
 interface IUser {
   email: string;
@@ -26,18 +27,18 @@ export class User extends AggregateRoot<IUser> {
     return this.props.role;
   }
 
+  addCreationEvent(event: DomainEvent) {
+    if (RegisterHandler.allowUserCreationEvents) {
+      this.addDomainEvent(event);
+    }
+  }
+
   set status(updatedStatus) {
     this.props.status = updatedStatus;
   }
 
   static create(props: IUser, id?: UniqueEntityID) {
     const user = new User(props, id);
-
-    const isNewUser = !id;
-
-    if (isNewUser) {
-      user.addDomainEvent(new UserCreatedEvent(user));
-    }
 
     return user;
   }

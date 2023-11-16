@@ -57,7 +57,7 @@ export class ChangePasswordUseCase {
       changePasswordData.password
     );
 
-    await this.usersRepository.save({
+    await this.usersRepository.changePassword({
       id: user.id.toString(),
       password: password_hash,
     });

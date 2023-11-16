@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { User } from "@/domain/auth/enterprise/entities/user";
 import { IChangePasswordRequest, IUsersRepository } from "../IUsersRepository";
 import { PrismaUserMapper } from "./mappers/PrismaUserMapper";
+import { DomainEvents } from "@/domain/core/events/domainEvents";
 
 export class PrismaUsersRepository implements IUsersRepository {
   constructor() {}
@@ -13,10 +14,12 @@ export class PrismaUsersRepository implements IUsersRepository {
       data,
     });
 
+    DomainEvents.dispatchEventsForAggregate(user.id);
+
     return user;
   }
 
-  async save(passwordData: IChangePasswordRequest): Promise<void> {
+  async changePassword(passwordData: IChangePasswordRequest): Promise<void> {
     await prisma.user.update({
       where: {
         id: passwordData.id,

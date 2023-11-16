@@ -8,6 +8,8 @@ import {
   right,
   left,
 } from "@/domain/core/utils/functionalErrorHandling/either";
+import { OnUserCreated } from "../subscribers/onUserCreated";
+import { UserCreatedEvent } from "../../enterprise/events/userCreatedEvent";
 
 type RegisterUseCaseResponse = Either<
   UserAlreadyExistsError,
@@ -36,6 +38,10 @@ export class RegisterUseCase {
       ...userData,
       password: password_hash,
     });
+
+    user.addCreationEvent(new UserCreatedEvent(user));
+    new OnUserCreated();
+
     await this.usersRepository.create(user);
 
     return right({ user });

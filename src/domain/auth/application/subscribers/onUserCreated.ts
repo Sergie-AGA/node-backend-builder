@@ -1,30 +1,17 @@
 import { DomainEvents } from "@/domain/core/events/domainEvents";
-import { EventHandler } from "@/domain/core/events/eventHandler";
+import { IEventHandler } from "@/domain/core/events/eventHandler";
 import { UserCreatedEvent } from "@/domain/auth/enterprise/events/userCreatedEvent";
-import { generalAuthSettings } from "../../authSettings";
-import { SendNotificationUseCase } from "@/domain/notification/application/use-cases/send-notification";
-
-const userRepository = new generalAuthSettings.repository();
-
-export class OnUserCreated implements EventHandler {
+import { RegisterHandler } from "../../authSettings";
+export class OnUserCreated implements IEventHandler {
   constructor() {
     this.setupSubscriptions();
   }
 
   setupSubscriptions(): void {
-    DomainEvents.register(
-      this.createUserConfirmationToken.bind(this),
-      UserCreatedEvent.name
-    );
-  }
+    const events = RegisterHandler.userCreationEvents;
 
-  private async createUserConfirmationToken({ user }: UserCreatedEvent) {
-    await this.sendNotification.execute({
-      recipientId: question.authorId.toString(),
-      title: `Nova resposta em "${question.title
-        .substring(0, 40)
-        .concat("...")}"`,
-      content: answer.excerpt,
+    events.forEach((event) => {
+      DomainEvents.register(event, UserCreatedEvent.name);
     });
   }
 }
