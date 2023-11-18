@@ -12,6 +12,8 @@ import { ConfirmBodySchema } from "../../authSettings";
 import { DateProvider } from "@/services/dateProvider/dateProvider";
 import { ResourceNotFoundError } from "@/domain/core/errors/resourceNotFoundError";
 import { UserStatusNotAllowed } from "./errors/userStatusNotAllowed";
+import { TokenUsedEvent } from "../../enterprise/events/tokenUsedEvent";
+import { OnTokenUsed } from "../subscribers/onTokenUsed";
 
 type ConfirmUserUseCaseResponse = Either<
   UserNotFoundError | UserAlreadyActiveError,
@@ -27,11 +29,9 @@ export class ConfirmUserUseCase {
   ) {}
 
   async execute(
-    changePasswordData: ConfirmBodySchema
+    confirmUserData: ConfirmBodySchema
   ): Promise<ConfirmUserUseCaseResponse> {
-    const token = await this.userTokensRepository.findById(
-      changePasswordData.tokenId
-    );
+    const token = await this.userTokensRepository.findById(confirmUserData.id);
 
     const dateProvider = new DateProvider();
 
@@ -45,18 +45,22 @@ export class ConfirmUserUseCase {
       return left(new ResourceNotFoundError());
     }
 
-    const user = await this.usersRepository.findById(changePasswordData.userId);
+    const user = await this.usersRepository.findById(token.userId);
 
     if (!user) {
-      return left(new UserNotFoundError(changePasswordData.userId));
+      return left(new UserNotFoundError(token.userId));
     }
 
     if (user.status !== "registered") {
-      return left(new UserStatusNotAllowed(changePasswordData.userId));
+      return left(new UserStatusNotAllowed(token.userId));
     }
 
+    token.addDeletionEvent(new TokenUsedEvent(token));
+    new OnTokenUsed();
+
     const updatedUser = await this.usersRepository.validateUser(
-      user.id.toString()
+      user.id,
+      token.id
     );
 
     return right({ updatedUser });

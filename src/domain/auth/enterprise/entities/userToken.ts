@@ -1,4 +1,3 @@
-import { Entity } from "@/domain/core/entities/entity";
 import { UniqueEntityID } from "@/domain/core/entities/uniqueEntityId";
 import { Optional } from "@/domain/core/types/optional";
 import { DateProvider } from "@/services/dateProvider/dateProvider";

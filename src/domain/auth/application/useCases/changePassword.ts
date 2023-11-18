@@ -15,6 +15,9 @@ import { IUsersRepository } from "../repositories/IUsersRepository";
 import { UserStatusNotAllowed } from "./errors/userStatusNotAllowed";
 import { ResourceNotFoundError } from "@/domain/core/errors/resourceNotFoundError";
 import { DateProvider } from "@/services/dateProvider/dateProvider";
+import { OnTokenUsed } from "../subscribers/onTokenUsed";
+import { TokenUsedEvent } from "../../enterprise/events/tokenUsedEvent";
+import { SamePasswordChangeError } from "./errors/samePasswordChange";
 
 type ChangePasswordUseCaseResponse = Either<ResourceAlreadyExistsError, null>;
 
@@ -46,20 +49,33 @@ export class ChangePasswordUseCase {
     const user = await this.usersRepository.findById(changePasswordData.userId);
 
     if (!user) {
-      return left(new UserNotFoundError(changePasswordData.userId));
+      return left(new UserNotFoundError(token.userId));
     }
 
     if (user.status == "registered") {
-      return left(new UserStatusNotAllowed(changePasswordData.userId));
+      return left(new UserStatusNotAllowed(token.userId));
+    }
+
+    if (
+      await ChangePasswordHandler.compare(
+        changePasswordData.password,
+        user.password
+      )
+    ) {
+      return left(new SamePasswordChangeError());
     }
 
     const password_hash = await ChangePasswordHandler.hash(
       changePasswordData.password
     );
 
+    token.addDeletionEvent(new TokenUsedEvent(token));
+    new OnTokenUsed();
+
     await this.usersRepository.changePassword({
-      id: user.id.toString(),
+      userId: user.id,
       password: password_hash,
+      tokenId: token.id,
     });
 
     return right(null);

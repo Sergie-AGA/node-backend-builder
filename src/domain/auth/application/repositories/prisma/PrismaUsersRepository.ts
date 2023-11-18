@@ -3,6 +3,7 @@ import { User } from "@/domain/auth/enterprise/entities/user";
 import { IChangePasswordRequest, IUsersRepository } from "../IUsersRepository";
 import { PrismaUserMapper } from "./mappers/PrismaUserMapper";
 import { DomainEvents } from "@/domain/core/events/domainEvents";
+import { UniqueEntityID } from "@/domain/core/entities/uniqueEntityId";
 
 export class PrismaUsersRepository implements IUsersRepository {
   constructor() {}
@@ -22,24 +23,27 @@ export class PrismaUsersRepository implements IUsersRepository {
   async changePassword(passwordData: IChangePasswordRequest): Promise<void> {
     await prisma.user.update({
       where: {
-        id: passwordData.id,
+        id: passwordData.userId.toString(),
       },
       data: {
         password_hash: passwordData.password,
       },
     });
+
+    DomainEvents.dispatchEventsForAggregate(passwordData.tokenId);
   }
 
-  async validateUser(id: string) {
+  async validateUser(userId: UniqueEntityID, tokenId: UniqueEntityID) {
     const response = await prisma.user.update({
       where: {
-        id: id.toString(),
+        id: userId.toString(),
       },
       data: {
         account_status: "active",
       },
     });
 
+    DomainEvents.dispatchEventsForAggregate(tokenId);
     const updatedUser = PrismaUserMapper.toDomain(response);
 
     return updatedUser;

@@ -8,7 +8,7 @@ import {
 
 type DeleteTokenUseCaseResponse = Either<ResourceNotFoundError, null>;
 
-export class DeleteTokenUserUseCase {
+export class DeleteTokenUseCase {
   constructor(private userTokensRepository: IUserTokensRepository) {}
 
   async execute(id: string): Promise<DeleteTokenUseCaseResponse> {

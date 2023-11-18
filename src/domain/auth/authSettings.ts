@@ -8,6 +8,8 @@ import { PrismaUserTokensRepository } from "./application/repositories/prisma/Pr
 import { UserCreatedEvent } from "./enterprise/events/userCreatedEvent";
 import { makeUseCase } from "@/patterns/factories/MakeUseCase";
 import { CreateTokenUseCase } from "./application/useCases/createToken";
+import { DeleteTokenUseCase } from "./application/useCases/deleteToken";
+import { TokenUsedEvent } from "./enterprise/events/tokenUsedEvent";
 
 const registerBodySchema = z.object({
   email: z.string().email(),
@@ -17,8 +19,7 @@ export type RegisterBodySchema = z.infer<typeof registerBodySchema>;
 export type LoginBodySchema = z.infer<typeof registerBodySchema>;
 
 const confirmBodySchema = z.object({
-  tokenId: z.string(),
-  userId: z.string(),
+  id: z.string(),
 });
 export type ConfirmBodySchema = z.infer<typeof confirmBodySchema>;
 
@@ -30,7 +31,6 @@ const changePasswordBodySchema = z.object({
 export type ChangePasswordBodySchema = z.infer<typeof changePasswordBodySchema>;
 
 const tokenBodySchema = z.object({
-  id: z.string().optional(),
   userId: z.string(),
   type: z.enum(["password_reset", "account_confirmation"]),
 });
@@ -115,6 +115,13 @@ export class ChangePasswordHandler {
   static hash(password: string) {
     return HasherProvider.hash(password);
   }
+  static compare(newPassword: string, oldPassword: string) {
+    return HasherProvider.compare(newPassword, oldPassword);
+  }
+
+  static get tokenDeletionEvents() {
+    return [AuthEventHandler.deleteUsedToken];
+  }
 }
 
 // User Token
@@ -147,6 +154,16 @@ export class AuthEventHandler {
         TokenHandler.tokenRepository,
         TokenHandler.userRepository
       ).execute({ userId: user.id.toString(), type: "account_confirmation" });
+    }
+  }
+
+  static async deleteUsedToken(event: unknown): Promise<void> {
+    if (event instanceof TokenUsedEvent) {
+      const { token } = event;
+      await makeUseCase(
+        DeleteTokenUseCase,
+        TokenHandler.tokenRepository
+      ).execute(token.id.toString());
     }
   }
 }

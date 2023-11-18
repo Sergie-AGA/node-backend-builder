@@ -17,7 +17,7 @@ POST {{baseUrl}}/auth/confirm
 Content-Type: application/json
 
 {
-  "id": "{{userId}}"
+  "id": "0d285195-560b-4eb0-a562-94ea3348576c"
 }
 
 ###
@@ -40,4 +40,28 @@ Content-Type: application/json
 {
   "email": "test@example.com",
   "password": "123456"
+}
+
+###
+
+# @name create_token
+POST {{baseUrl}}/auth/user-token/create
+Content-Type: application/json
+
+{
+  "userId": "960c60f9-b2d2-4eb6-a262-ac108a0ebfef",
+  "type": "password_reset" 
+}
+### "type":  "account_confirmation""
+
+###
+
+# @name change_password
+PATCH {{baseUrl}}/auth/change-password
+Content-Type: application/json
+
+{
+  "userId": "960c60f9-b2d2-4eb6-a262-ac108a0ebfef",
+  "tokenId": "be9fa856-d34b-4784-9d1d-0d447faf47cf",
+  "password": "123456789"
 }
