@@ -6,4 +6,5 @@ export interface IUserTokensRepository {
   findById(id: UniqueEntityID | string): Promise<UserToken | null>;
   findByUserId(id: UniqueEntityID | string): Promise<UserToken | null>;
   delete(data: UserToken): Promise<void>;
+  deleteAllExpired(): Promise<void>;
 }

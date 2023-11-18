@@ -24,6 +24,7 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/node": "^20.4.5",
+    "@types/node-cron": "^3.0.11",
     "@types/nodemailer": "^6.4.11",
     "@types/shelljs": "^0.8.14",
     "@types/supertest": "^2.0.12",
@@ -51,6 +52,7 @@
     "fastify": "^4.21.0",
     "handlebars": "^4.7.8",
     "inquirer": "^9.2.11",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.9.5",
     "supertest": "^6.3.3",
     "unplugin-swc": "^1.4.3",

@@ -83,7 +83,10 @@ export class ConfirmHandler {
 
 // Login
 export class LoginHandler {
-  static get repository() {
+  static get tokenRepository() {
+    return PrismaUserTokensRepository;
+  }
+  static get userRepository() {
     return PrismaUsersRepository;
   }
   static validate(data: unknown) {
@@ -141,6 +144,9 @@ export class TokenHandler {
   }
   static get allowTokenDeletionEvents() {
     return true;
+  }
+  static get deleteExpiredTokensRepository() {
+    return new PrismaUserTokensRepository().deleteAllExpired;
   }
 }
 

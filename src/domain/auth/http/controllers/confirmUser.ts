@@ -5,6 +5,7 @@ import { ConfirmUserUseCase } from "../../application/useCases/confirmUser";
 import { genericError } from "@/domain/core/errors/genericError";
 import { UserNotFoundError } from "../../application/useCases/errors/userNotFound";
 import { UserAlreadyActiveError } from "../../application/useCases/errors/userAlreadyActive";
+import { DomainEvents } from "@/domain/core/events/domainEvents";
 
 export async function confirm(req: FastifyRequest, res: FastifyReply) {
   try {
@@ -21,6 +22,8 @@ export async function confirm(req: FastifyRequest, res: FastifyReply) {
     }
 
     const user = response.value.updatedUser;
+
+    DomainEvents.clearHandlers();
 
     return res.status(200).send({ attributes: ConfirmHandler.presenter(user) });
   } catch (err) {

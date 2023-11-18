@@ -9,6 +9,8 @@ import {
 } from "@/domain/core/utils/functionalErrorHandling/either";
 import { InvalidCredentialsError } from "./errors/invalidCredentialsError";
 import { UserNotActiveError } from "./errors/userNotActive";
+import { IUserTokensRepository } from "../repositories/IUserTokensRepository";
+import { UserToken } from "../../enterprise/entities/userToken";
 
 type LoginUseCaseResponse = Either<
   InvalidCredentialsError | UserNotActiveError,
@@ -18,7 +20,10 @@ type LoginUseCaseResponse = Either<
 >;
 
 export class LoginUseCase {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(
+    private usersRepository: IUsersRepository,
+    private userTokensRepository: IUserTokensRepository
+  ) {}
 
   async execute(userData: LoginBodySchema): Promise<LoginUseCaseResponse> {
     const user = await this.usersRepository.findByEmail(userData.email);
@@ -37,7 +42,19 @@ export class LoginUseCase {
     }
 
     if (user.status !== "active") {
-      return left(new UserNotActiveError(userData.email));
+      const token = await this.userTokensRepository.findByUserId(
+        user.id.toString()
+      );
+      if (!token) {
+        const newToken = UserToken.create({
+          userId: user.id.toString(),
+          type: "account_confirmation",
+        });
+
+        this.userTokensRepository.create(newToken);
+      } else {
+        return left(new UserNotActiveError(userData.email));
+      }
     }
 
     return right({ user });

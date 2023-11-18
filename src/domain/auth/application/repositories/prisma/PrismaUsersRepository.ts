@@ -26,7 +26,7 @@ export class PrismaUsersRepository implements IUsersRepository {
         id: passwordData.userId.toString(),
       },
       data: {
-        password_hash: passwordData.password,
+        passwordHash: passwordData.password,
       },
     });
 
@@ -39,7 +39,7 @@ export class PrismaUsersRepository implements IUsersRepository {
         id: userId.toString(),
       },
       data: {
-        account_status: "active",
+        accountStatus: "active",
       },
     });
 

@@ -22,14 +22,14 @@ enum Role {
 }
 
 model User {
-  id             String        @id @default(uuid())
-  email          String        @unique
-  password_hash  String
-  role           Role          @default(member)
-  account_status AccountStatus @default(registered)
+  id            String        @id @default(uuid())
+  email         String        @unique
+  passwordHash  String
+  role          Role          @default(member)
+  accountStatus AccountStatus @default(registered)
 
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   UserTokens UserToken[]
 
@@ -47,8 +47,8 @@ model UserToken {
   type               TokenType
   expirationDateTime DateTime
 
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
 

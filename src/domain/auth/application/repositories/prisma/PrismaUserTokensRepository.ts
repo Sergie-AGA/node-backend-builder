@@ -51,4 +51,14 @@ export class PrismaUserTokensRepository implements IUserTokensRepository {
       },
     });
   }
+
+  async deleteAllExpired() {
+    await prisma.userToken.deleteMany({
+      where: {
+        expirationDateTime: {
+          lte: new Date(),
+        },
+      },
+    });
+  }
 }

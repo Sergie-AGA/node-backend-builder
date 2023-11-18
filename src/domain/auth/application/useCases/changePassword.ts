@@ -65,7 +65,7 @@ export class ChangePasswordUseCase {
       return left(new SamePasswordChangeError());
     }
 
-    const password_hash = await ChangePasswordHandler.hash(
+    const passwordHash = await ChangePasswordHandler.hash(
       changePasswordData.password
     );
 
@@ -74,7 +74,7 @@ export class ChangePasswordUseCase {
 
     await this.usersRepository.changePassword({
       userId: user.id,
-      password: password_hash,
+      password: passwordHash,
       tokenId: token.id,
     });
 

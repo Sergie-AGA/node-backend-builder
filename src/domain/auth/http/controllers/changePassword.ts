@@ -6,6 +6,7 @@ import { ChangePasswordUseCase } from "../../application/useCases/changePassword
 import { UserNotFoundError } from "../../application/useCases/errors/userNotFound";
 import { UserStatusNotAllowed } from "../../application/useCases/errors/userStatusNotAllowed";
 import { ResourceNotFoundError } from "@/domain/core/errors/resourceNotFoundError";
+import { DomainEvents } from "@/domain/core/events/domainEvents";
 
 export async function changePassword(req: FastifyRequest, res: FastifyReply) {
   try {
@@ -20,6 +21,8 @@ export async function changePassword(req: FastifyRequest, res: FastifyReply) {
     if (response.isLeft()) {
       throw response.value;
     }
+
+    DomainEvents.clearHandlers();
 
     return res.status(200).send();
   } catch (err) {

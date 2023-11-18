@@ -4,6 +4,7 @@ import { makeUseCase } from "@/patterns/factories/MakeUseCase";
 import { UserAlreadyExistsError } from "../../application/useCases/errors/userAlreadyExists";
 import { RegisterUseCase } from "../../application/useCases/register";
 import { genericError } from "@/domain/core/errors/genericError";
+import { DomainEvents } from "@/domain/core/events/domainEvents";
 
 export async function register(req: FastifyRequest, res: FastifyReply) {
   try {
@@ -19,6 +20,8 @@ export async function register(req: FastifyRequest, res: FastifyReply) {
     }
 
     const user = response.value.user;
+
+    DomainEvents.clearHandlers();
 
     return res
       .status(201)

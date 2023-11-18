@@ -9,7 +9,6 @@ export class PrismaUserTokenMapper {
         userId: raw.userId,
         type: raw.type,
         expirationDateTime: raw.expirationDateTime,
-        used: raw.used,
       },
       new UniqueEntityID(raw.id)
     );
@@ -21,8 +20,7 @@ export class PrismaUserTokenMapper {
       userId: token.userId,
       type: token.type,
       expirationDateTime: token.expirationDateTime,
-      used: token.used,
-      updated_at: new Date(),
+      updatedAt: new Date(),
     };
   }
 }

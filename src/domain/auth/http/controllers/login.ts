@@ -12,7 +12,8 @@ export async function login(req: FastifyRequest, res: FastifyReply) {
 
     const response = await makeUseCase(
       LoginUseCase,
-      LoginHandler.repository
+      LoginHandler.userRepository,
+      LoginHandler.tokenRepository
     ).execute(userRaw);
 
     if (response.isLeft()) {

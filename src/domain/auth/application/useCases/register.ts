@@ -32,11 +32,11 @@ export class RegisterUseCase {
       return left(new UserAlreadyExistsError(userData.email));
     }
 
-    const password_hash = await RegisterHandler.hash(userData.password);
+    const passwordHash = await RegisterHandler.hash(userData.password);
 
     const user = User.create({
       ...userData,
-      password: password_hash,
+      password: passwordHash,
     });
 
     user.addCreationEvent(new UserCreatedEvent(user));

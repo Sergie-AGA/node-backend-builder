@@ -7,6 +7,7 @@ import { routes } from "./routes";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import { swaggerOptions, swaggerUiOptions } from "./lib/swagger-setup";
+import { applicationSettings } from "./domain/applicationSettings";
 
 export const app = fastify();
 
@@ -21,6 +22,10 @@ app.register(fastifyJwt, {
   sign: {
     expiresIn: "10m",
   },
+});
+// Services - I.e. Cron Jobs
+applicationSettings.services.forEach((service) => {
+  service();
 });
 
 // Docs
