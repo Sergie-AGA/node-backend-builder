@@ -17,40 +17,7 @@ describe("Confirm User Use Case", () => {
     sut = new ConfirmUserUseCase(inMemoryUsersRepository);
   });
 
-  it("should be able to confirm a registered user", async () => {
-    let user = User.create({ ...mockUser, status: "registered" });
+  it("should be able to create a token", async () => {});
 
-    inMemoryUsersRepository.items.push(user);
-
-    await sut.execute(user.id.toString());
-
-    const status = inMemoryUsersRepository.items[0].status;
-
-    expect(status).toBe("active");
-  });
-
-  it("should not be able to confirm a non-existing user", async () => {
-    let user = User.create({ ...mockUser, status: "registered" });
-
-    inMemoryUsersRepository.items.push(user);
-
-    const response = await sut.execute("123");
-
-    const error = response.value;
-
-    expect(error).toBeInstanceOf(UserNotFoundError);
-  });
-
-  it("should not be able to confirm a user for the second time", async () => {
-    let user = User.create({ ...mockUser, status: "registered" });
-
-    inMemoryUsersRepository.items.push(user);
-
-    await sut.execute(user.id.toString());
-    const response = await sut.execute(user.id.toString());
-
-    const error = response.value;
-
-    expect(error).toBeInstanceOf(UserAlreadyActiveError);
-  });
+  it("should not be able to create a duplicated token", async () => {});
 });

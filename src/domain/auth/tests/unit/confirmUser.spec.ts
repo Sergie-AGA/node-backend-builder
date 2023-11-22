@@ -39,6 +39,18 @@ describe("Confirm User Use Case", () => {
     expect(error).toBeInstanceOf(UserNotFoundError);
   });
 
+  it("should not be able to use an expired or inexistent token", async () => {
+    let user = User.create({ ...mockUser, status: "registered" });
+
+    inMemoryUsersRepository.items.push(user);
+
+    const response = await sut.execute("123");
+
+    const error = response.value;
+
+    expect(error).toBeInstanceOf(UserNotFoundError);
+  });
+
   it("should not be able to confirm a user for the second time", async () => {
     let user = User.create({ ...mockUser, status: "registered" });
 

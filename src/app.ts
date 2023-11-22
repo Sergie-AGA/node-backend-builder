@@ -8,7 +8,9 @@ import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import { swaggerOptions, swaggerUiOptions } from "./lib/swagger-setup";
 import { applicationSettings } from "./domain/applicationSettings";
+import cors from "@fastify/cors";
 
+// Setup
 export const app = fastify();
 
 app.register(cookie);
@@ -22,6 +24,9 @@ app.register(fastifyJwt, {
   sign: {
     expiresIn: "10m",
   },
+});
+app.register(cors, {
+  // put your options here
 });
 // Services - I.e. Cron Jobs
 applicationSettings.services.forEach((service) => {

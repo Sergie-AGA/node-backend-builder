@@ -33,4 +33,8 @@ export class InMemoryUsersRepository implements IUserTokensRepository {
 
     this.items.splice(itemIndex, 1);
   }
+
+  deleteAllExpired(): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
 }

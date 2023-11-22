@@ -25,8 +25,11 @@ export const registerDocs = {
         },
       },
       409: {
-        type: "null",
-        description: "Validation error",
+        type: "object",
+        description: "User already exists",
+        properties: {
+          error: { type: "string" },
+        },
       },
       400: {
         type: "null",

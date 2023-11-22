@@ -28,6 +28,8 @@ export async function register(req: FastifyRequest, res: FastifyReply) {
       .send({ attributes: RegisterHandler.presenter(user) });
   } catch (err) {
     if (err instanceof UserAlreadyExistsError) {
+      console.log(1);
+      console.log(err);
       return res.status(409).send({ error: err.message });
     }
 
