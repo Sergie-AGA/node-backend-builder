@@ -7,7 +7,7 @@ export const applicationSettings = {
 };
 
 function createCronJobs() {
-  cron.schedule("0 57 * * * *", () => {
+  cron.schedule("0 0 0 * * *", () => {
     deleteExpiredTokens();
   });
 }
