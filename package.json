@@ -1,7 +1,7 @@
 {
-  "name": "backend-builder",
+  "name": "Reusable Node JS",
   "version": "1.0.0",
-  "description": "CLI Tool that aims to generate reusable modules for backend applications",
+  "description": "A login system made from scratch using best practices, including SOLID principles and Domain-Driven Design and Test Driven Development ",
   "main": "index.js",
   "bin": {
     "kl-cli": "node ./bin/copy.js"
